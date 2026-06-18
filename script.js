@@ -133,9 +133,19 @@ function initAgeGate() {
 
 function initHideableHeader() {
   const header = document.querySelector(".site-header");
+  if (!header) return;
+
+  const toggle = header?.querySelector(".nav-toggle");
+  const navLinks = header?.querySelectorAll(".site-nav a") || [];
   const mobileQuery = window.matchMedia("(max-width: 860px)");
   let lastScrollY = window.scrollY;
   let ticking = false;
+
+  function closeNav() {
+    header.classList.remove("is-nav-open");
+    document.body.classList.remove("has-open-nav");
+    toggle?.setAttribute("aria-expanded", "false");
+  }
 
   function setHeaderState() {
     const currentScrollY = window.scrollY;
@@ -143,7 +153,10 @@ function initHideableHeader() {
     const shouldHide = mobileQuery.matches && currentScrollY > 140 && scrollDelta > 8;
     const shouldShow = !mobileQuery.matches || scrollDelta < -6 || currentScrollY < 80;
 
-    if (shouldHide) header.classList.add("is-header-hidden");
+    if (shouldHide) {
+      closeNav();
+      header.classList.add("is-header-hidden");
+    }
     if (shouldShow) header.classList.remove("is-header-hidden");
 
     lastScrollY = currentScrollY;
@@ -158,11 +171,28 @@ function initHideableHeader() {
 
   mobileQuery.addEventListener("change", () => {
     header.classList.remove("is-header-hidden");
+    closeNav();
     lastScrollY = window.scrollY;
   });
 
-  header.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => header.classList.remove("is-header-hidden"));
+  toggle?.addEventListener("click", () => {
+    const isOpen = header.classList.toggle("is-nav-open");
+    document.body.classList.toggle("has-open-nav", isOpen);
+    header.classList.remove("is-header-hidden");
+    toggle.setAttribute("aria-expanded", String(isOpen));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!header.classList.contains("is-nav-open")) return;
+    if (header.contains(event.target)) return;
+    closeNav();
+  });
+
+  navLinks.forEach((link) => {
+    link.addEventListener("click", () => {
+      header.classList.remove("is-header-hidden");
+      closeNav();
+    });
   });
 }
 

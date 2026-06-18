@@ -19,7 +19,7 @@
   <link rel="apple-touch-icon" href="images/winfield-liquors-logo.svg?v=bear-beer-fishing-logo">
   <meta name="theme-color" content="#082f49">
   <title>Winfield Liquors | Winfield's Lake-Community Liquor Store</title>
-  <link rel="stylesheet" href="styles.css?v=bear-beer-fishing-logo">
+  <link rel="stylesheet" href="styles.css?v=side-drawer-menu">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -79,16 +79,17 @@
         <small>Winfield, Indiana</small>
       </span>
     </a>
-    <nav class="site-nav">
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
+    <nav class="site-nav" id="site-nav">
       <a href="#featured">Featured</a>
       <a href="#store-photos">Photos</a>
       <a href="#kegs-orders">Kegs</a>
-      <a href="#allocations">Bourbon / Whisky</a>
+      <a href="#allocations">Bourbon</a>
       <a href="#craft-beers">Craft Beer</a>
       <a href="#tequilas">Tequila</a>
-      <a href="#champagnes">Champagne</a>
+      <a href="#champagnes">Bubbles</a>
       <a href="#deals">Deals</a>
-      <a href="#visit">Contact Us</a>
+      <a href="#visit">Contact</a>
     </nav>
   </header>
 
@@ -298,6 +299,6 @@
       storeName: "Winfield Liquors"
     };
   </script>
-  <script src="script.js?v=hideable-mobile-nav"></script>
+  <script src="script.js?v=side-drawer-menu"></script>
 </body>
 </html>
