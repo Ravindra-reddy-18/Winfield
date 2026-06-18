@@ -131,6 +131,42 @@ function initAgeGate() {
   });
 }
 
+function initHideableHeader() {
+  const header = document.querySelector(".site-header");
+  const mobileQuery = window.matchMedia("(max-width: 860px)");
+  let lastScrollY = window.scrollY;
+  let ticking = false;
+
+  function setHeaderState() {
+    const currentScrollY = window.scrollY;
+    const scrollDelta = currentScrollY - lastScrollY;
+    const shouldHide = mobileQuery.matches && currentScrollY > 140 && scrollDelta > 8;
+    const shouldShow = !mobileQuery.matches || scrollDelta < -6 || currentScrollY < 80;
+
+    if (shouldHide) header.classList.add("is-header-hidden");
+    if (shouldShow) header.classList.remove("is-header-hidden");
+
+    lastScrollY = currentScrollY;
+    ticking = false;
+  }
+
+  window.addEventListener("scroll", () => {
+    if (ticking) return;
+    window.requestAnimationFrame(setHeaderState);
+    ticking = true;
+  }, { passive: true });
+
+  mobileQuery.addEventListener("change", () => {
+    header.classList.remove("is-header-hidden");
+    lastScrollY = window.scrollY;
+  });
+
+  header.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => header.classList.remove("is-header-hidden"));
+  });
+}
+
 initAgeGate();
 initFeaturedCarousel();
+initHideableHeader();
 loadStorefront();
