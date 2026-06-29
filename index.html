@@ -82,14 +82,15 @@
     <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav">Menu</button>
     <nav class="site-nav" id="site-nav">
       <a href="#featured">Featured</a>
-      <a href="#store-photos">Photos</a>
+      <a href="#deals">Deals</a>
       <a href="#kegs-orders">Kegs</a>
+      <a href="#text-alerts">Text Alerts</a>
       <a href="#allocations">Bourbon</a>
       <a href="#craft-beers">Craft Beer</a>
       <a href="#tequilas">Tequila</a>
       <a href="#champagnes">Bubbles</a>
-      <a href="#deals">Deals</a>
-      <a href="#visit">Contact</a>
+      <a href="#store-photos">Photos</a>
+      <a href="#visit">Contact/Hours</a>
     </nav>
   </header>
 
@@ -109,10 +110,112 @@
       </div>
     </section>
 
+    <section class="today-strip" aria-label="Today's store hours">
+      <strong id="today-status">Today</strong>
+      <span id="today-hours">Checking today's hours...</span>
+      <a href="tel:2196619601">Call (219) 661-9601</a>
+    </section>
+
+    <section id="featured" class="section">
+      <div class="section-head">
+        <h2>Featured</h2>
+        <p>Lake-weekend picks, limited bottles, and current store favorites.</p>
+        <span class="scroll-cue">Scroll for more</span>
+      </div>
+      <div class="featured-carousel">
+        <div class="featured-grid" data-section="featured"></div>
+      </div>
+    </section>
+
+    <section id="text-alerts" class="town-intro">
+      <div>
+        <p class="eyebrow">Text Alerts</p>
+        <h2>Get Winfield Liquors updates right on your phone.</h2>
+      </div>
+      <div class="town-intro-content">
+        <div class="text-alert-card" aria-labelledby="text-alert-title">
+          <div class="text-alert-copy">
+            <h3 id="text-alert-title">Join the text list</h3>
+            <p>Get promotional messages and local updates from Winfield Liquors.</p>
+          </div>
+          <div class="st-signupform">
+            <form
+              id="st-join-web-form-6a4293643c8bcb1693fe9aa5"
+              class="st-signupform-content"
+              action="https://app2.simpletexting.com/join/joinContact"
+              method="POST"
+            >
+              <div class="step1-form">
+                <div class="required">
+                  <label class="st-signupform__label" for="phone">
+                    Phone <span class="required-mark" aria-hidden="true">*</span>
+                  </label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="text"
+                    placeholder="(XXX) XXX-XXXX"
+                    maxlength="1600"
+                    data-type="phone"
+                  >
+                </div>
+                <div id="js-error-phone" class="st-error-message"></div>
+
+                <div class="st-terms-and-conditions">
+                  <div class="st-checkbox terms-checkbox">
+                    <input id="terms-agreed-checkbox-6a4293643c8bcb1693fe9aa5" type="checkbox" name="terms-agreed">
+                    <label class="st-terms-and-conditions-text" for="terms-agreed-checkbox-6a4293643c8bcb1693fe9aa5">
+                      Terms and conditions
+                    </label>
+                  </div>
+                  <div class="st-terms-and-conditions-caption st-font-caption">
+                    <p>
+                      I agree to receive promotional messages from Winfield Liquors up to 5 Msgs/Month.
+                      This agreement isn't a condition of any purchase.
+                      I also agree to the
+                      <a href="https://app2.simpletexting.com/web-forms/terms/6a4293643c8bcb1693fe9aa5" target="_blank" rel="noopener">Terms of Service</a> and
+                      <a href="https://app2.simpletexting.com/web-forms/privacy-policy/6a4293643c8bcb1693fe9aa5" target="_blank" rel="noopener">Privacy Policy</a>.
+                      Msg & Data rates may apply.
+                    </p>
+                    <p>
+                      By submitting this form, I agree that my mobile information will not be shared
+                      with third parties/affiliates for marketing/promotional purposes.
+                      Text STOP to opt-out. Text HELP for assistance. contactus@fivestarliquorscp.com.
+                    </p>
+                  </div>
+                  <div class="st-signupform-terms-agreed-error st-hidden">
+                    You have to agree on terms in order to proceed to the subscription.
+                  </div>
+                </div>
+
+                <div class="st-join-web-form-submit-button-box">
+                  <button id="subscribeNow" type="submit">Subscribe now</button>
+                  <p class="st-signupform-server-error-message st-hidden"></p>
+                </div>
+              </div>
+
+              <div class="step2-confirmationText" style="display: none;">
+                <p>Thank you for signing up! You will receive messages from Winfield Liquors.</p>
+              </div>
+
+              <footer>
+                SMS marketing powered by
+                <a href="https://www.simpletexting.com" title="SMS marketing - SimpleTexting.com" target="_blank" rel="noopener">SimpleTexting</a>
+              </footer>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="local-strip" aria-label="Winfield Liquors local highlights">
       <article>
         <strong>20+ Years Local</strong>
         <span>A familiar Winfield stop with roots that run deep in a young, proud town.</span>
+      </article>
+      <article>
+        <strong>Google Rating</strong>
+        <span class="rating-stars" aria-label="4.1 out of 5 stars, based on 153 reviews">4.1 &#9733; &#9733; &#9733; &#9733; &#9734; <small>153 reviews</small></span>
       </article>
       <article>
         <strong>Lake Weekend Ready</strong>
@@ -124,14 +227,66 @@
       </article>
     </section>
 
-    <section class="town-intro">
-      <div>
-        <p class="eyebrow">Proudly Winfield</p>
-        <h2>A local store for a town with its own identity.</h2>
+    <section id="kegs-orders" class="section alt services-section">
+      <div class="section-head">
+        <h2>Kegs & Special Orders</h2>
+        <p>Planning a party, lake weekend, wedding, cookout, or larger gathering? Winfield Liquors keeps domestic kegs in stock and can help with special orders across kegs, liquor, wine, and beer.</p>
       </div>
-      <p>
-        Winfield has never felt like just another stop between bigger towns. It is a fast-growing Lake County community where long-time locals, new settlers, and lake neighborhoods all bring their own weekend routines: hosting, grilling, fishing, boating, and getting people together. Winfield Liquors fits that rhythm: familiar, friendly, stocked for the way local customers actually live, and ready to help with domestic kegs or special orders across liquor, wine, and beer.
-      </p>
+      <div class="service-grid">
+        <article class="service-card">
+          <strong>Domestic Kegs</strong>
+          <span>Domestic kegs are stocked for local events and weekend gatherings. Call ahead for current brands, sizes, and availability.</span>
+        </article>
+        <article class="service-card">
+          <strong>Keg Special Orders</strong>
+          <span>Need a specific keg? The team can take special orders and help confirm timing before your event.</span>
+        </article>
+        <article class="service-card">
+          <strong>Liquor, Wine & Beer Orders</strong>
+          <span>Ask about special orders for all types of liquor, wine, beer, champagne, and ready-to-drink favorites.</span>
+        </article>
+      </div>
+    </section>
+
+    <section id="deals" class="section alt">
+      <div class="section-head">
+        <h2>Weekly Deals</h2>
+        <p>Current in-store specials for boat days, cookouts, parties, and weekly restocks.</p>
+        <a class="section-link" href="#text-alerts">Join text alerts for deal updates</a>
+      </div>
+      <div class="card-grid" data-section="deals"></div>
+    </section>
+
+    <section id="allocations" class="section alt">
+      <div class="section-head">
+        <h2>Bourbon / Whisky</h2>
+        <p>Bourbon, whisky, and hard-to-find bottle updates for Winfield lake weekends, collectors, and hosts.</p>
+      </div>
+      <div class="card-grid" data-section="allocations"></div>
+    </section>
+
+    <section id="craft-beers" class="section">
+      <div class="section-head">
+        <h2>Craft Beer</h2>
+        <p>Seasonal beer, local favorites, limited releases, domestic kegs in stock, and special beer orders.</p>
+      </div>
+      <div class="card-grid" data-section="craft-beers"></div>
+    </section>
+
+    <section id="tequilas" class="section">
+      <div class="section-head">
+        <h2>Tequila</h2>
+        <p>Blanco, reposado, anejo, and premium tequila picks.</p>
+      </div>
+      <div class="card-grid" data-section="tequilas"></div>
+    </section>
+
+    <section id="champagnes" class="section">
+      <div class="section-head">
+        <h2>Champagne</h2>
+        <p>Celebration bottles, gifts, and premium bubbles.</p>
+      </div>
+      <div class="card-grid" data-section="champagnes"></div>
     </section>
 
     <section id="store-photos" class="section photo-section">
@@ -167,82 +322,9 @@
       </div>
     </section>
 
-    <section id="featured" class="section">
-      <div class="section-head">
-        <h2>Featured</h2>
-        <p>Lake-weekend picks, limited bottles, and current store favorites.</p>
-      </div>
-      <div class="featured-carousel">
-        <button class="featured-btn" data-featured-direction="prev" type="button" aria-label="Previous featured item">‹</button>
-        <div class="featured-grid" data-section="featured"></div>
-        <button class="featured-btn" data-featured-direction="next" type="button" aria-label="Next featured item">›</button>
-      </div>
-    </section>
-
-    <section id="allocations" class="section alt">
-      <div class="section-head">
-        <h2>Bourbon / Whisky</h2>
-        <p>Bourbon, whisky, and hard-to-find bottle updates for Winfield lake weekends, collectors, and hosts.</p>
-      </div>
-      <div class="card-grid" data-section="allocations"></div>
-    </section>
-
-    <section id="craft-beers" class="section">
-      <div class="section-head">
-        <h2>Craft Beer</h2>
-        <p>Seasonal beer, local favorites, limited releases, domestic kegs in stock, and special beer orders.</p>
-      </div>
-      <div class="card-grid" data-section="craft-beers"></div>
-    </section>
-
-    <section id="kegs-orders" class="section alt services-section">
-      <div class="section-head">
-        <h2>Kegs & Special Orders</h2>
-        <p>Planning a party, lake weekend, wedding, cookout, or larger gathering? Winfield Liquors keeps domestic kegs in stock and can help with special orders across kegs, liquor, wine, and beer.</p>
-      </div>
-      <div class="service-grid">
-        <article class="service-card">
-          <strong>Domestic Kegs</strong>
-          <span>Domestic kegs are stocked for local events and weekend gatherings. Call ahead for current brands, sizes, and availability.</span>
-        </article>
-        <article class="service-card">
-          <strong>Keg Special Orders</strong>
-          <span>Need a specific keg? The team can take special orders and help confirm timing before your event.</span>
-        </article>
-        <article class="service-card">
-          <strong>Liquor, Wine & Beer Orders</strong>
-          <span>Ask about special orders for all types of liquor, wine, beer, champagne, and ready-to-drink favorites.</span>
-        </article>
-      </div>
-    </section>
-
-    <section id="tequilas" class="section">
-      <div class="section-head">
-        <h2>Tequila</h2>
-        <p>Blanco, reposado, anejo, and premium tequila picks.</p>
-      </div>
-      <div class="card-grid" data-section="tequilas"></div>
-    </section>
-
-    <section id="champagnes" class="section">
-      <div class="section-head">
-        <h2>Champagne</h2>
-        <p>Celebration bottles, gifts, and premium bubbles.</p>
-      </div>
-      <div class="card-grid" data-section="champagnes"></div>
-    </section>
-
-    <section id="deals" class="section alt">
-      <div class="section-head">
-        <h2>Weekly Deals</h2>
-        <p>Current in-store specials for boat days, cookouts, parties, and weekly restocks.</p>
-      </div>
-      <div class="card-grid" data-section="deals"></div>
-    </section>
-
     <section id="visit" class="visit-section">
       <div class="visit-copy">
-        <p class="eyebrow">Visit Winfield Liquors</p>
+        <p class="eyebrow">Contact/Hours</p>
         <h2>Easy local stop on Randolph Street for lake weekends and everyday restocks.</h2>
         <p class="visit-note">Open now hours can vary on holidays. Please call for details before special trips.</p>
         <div class="visit-details">
@@ -257,10 +339,6 @@
           <article>
             <strong>Kegs & Orders</strong>
             <span>Call for domestic keg stock, keg special orders, and special orders for liquor, wine, and beer.</span>
-          </article>
-          <article>
-            <strong>Facebook</strong>
-            <span><a class="social-handle" href="https://www.facebook.com/p/Winfield-Liquors-100063675038070/" target="_blank" rel="noopener">Winfield Liquors</a></span>
           </article>
         </div>
         <div class="hours-grid">
@@ -287,7 +365,11 @@
 
   <footer class="site-footer">
     <p>Winfield Liquors | Winfield, Indiana</p>
-    <p class="footer-social">Facebook: <a href="https://www.facebook.com/p/Winfield-Liquors-100063675038070/" target="_blank" rel="noopener">Winfield Liquors</a></p>
+    <p class="footer-social">
+      Facebook: <a href="https://www.facebook.com/p/Winfield-Liquors-100063675038070/" target="_blank" rel="noopener">Winfield Liquors</a>
+      <span aria-hidden="true">|</span>
+      Google Maps: <a href="https://www.google.com/maps/search/?api=1&query=Winfield%20Liquors%2010750%20Randolph%20St%20Winfield%20IN%2046307" target="_blank" rel="noopener">View listing</a>
+    </p>
   </footer>
 
   <script>

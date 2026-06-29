@@ -1,6 +1,16 @@
 const config = window.STORE_CONFIG || {};
 const sections = ["featured", "allocations", "craft-beers", "tequilas", "champagnes", "deals"];
 const FEATURED_AUTOPLAY_MS = 4500;
+const STORE_TIME_ZONE = "America/Chicago";
+const weeklyHours = [
+  { day: "Sunday", label: "12:00 PM - 8:00 PM", open: "12:00", close: "20:00" },
+  { day: "Monday", label: "8:30 AM - 10:00 PM", open: "08:30", close: "22:00" },
+  { day: "Tuesday", label: "8:30 AM - 10:00 PM", open: "08:30", close: "22:00" },
+  { day: "Wednesday", label: "8:30 AM - 10:00 PM", open: "08:30", close: "22:00" },
+  { day: "Thursday", label: "8:30 AM - 10:00 PM", open: "08:30", close: "22:00" },
+  { day: "Friday", label: "8:30 AM - 10:30 PM", open: "08:30", close: "22:30" },
+  { day: "Saturday", label: "8:30 AM - 10:30 PM", open: "08:30", close: "22:30" },
+];
 
 function escapeHtml(value) {
   return String(value || "")
@@ -80,15 +90,6 @@ function initFeaturedCarousel() {
     autoplayId = null;
   }
 
-  document.querySelectorAll("[data-featured-direction]").forEach((button) => {
-    button.addEventListener("click", () => {
-      const direction = button.dataset.featuredDirection === "prev" ? -1 : 1;
-      stopAutoplay();
-      scrollFeatured(direction);
-      startAutoplay();
-    });
-  });
-
   const carousel = document.querySelector(".featured-carousel");
   carousel?.addEventListener("mouseenter", stopAutoplay);
   carousel?.addEventListener("mouseleave", startAutoplay);
@@ -129,6 +130,38 @@ function initAgeGate() {
     localStorage.setItem("ageVerified", "true");
     gate.classList.add("is-hidden");
   });
+}
+
+function initTodayHours() {
+  const strip = document.querySelector(".today-strip");
+  const status = document.getElementById("today-status");
+  const hours = document.getElementById("today-hours");
+  if (!strip || !status || !hours) return;
+
+  const nowParts = new Intl.DateTimeFormat("en-US", {
+    timeZone: STORE_TIME_ZONE,
+    weekday: "long",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  }).formatToParts(new Date());
+  const day = nowParts.find((part) => part.type === "weekday")?.value;
+  const hour = Number(nowParts.find((part) => part.type === "hour")?.value || 0);
+  const minute = Number(nowParts.find((part) => part.type === "minute")?.value || 0);
+  const today = weeklyHours.find((entry) => entry.day === day);
+  if (!today) return;
+
+  function toMinutes(value) {
+    const [hoursValue, minutesValue] = value.split(":").map(Number);
+    return hoursValue * 60 + minutesValue;
+  }
+
+  const currentMinutes = hour * 60 + minute;
+  const isOpen = currentMinutes >= toMinutes(today.open) && currentMinutes < toMinutes(today.close);
+
+  strip.classList.toggle("is-closed", !isOpen);
+  status.textContent = isOpen ? "Open now" : "Closed now";
+  hours.textContent = `${today.day}: ${today.label}`;
 }
 
 function initHideableHeader() {
@@ -196,7 +229,212 @@ function initHideableHeader() {
   });
 }
 
+function initTextAlertSignup() {
+  const webFormId = "6a4293643c8bcb1693fe9aa5";
+  const formFields = [{ name: "phone", label: "Phone", type: "phone" }];
+  const fieldErrorClassName = "st-signupform-validation-error";
+  const forms = document.querySelectorAll(`#st-join-web-form-${webFormId}`);
+  const duplicatePhoneException = "DuplicateContactPhoneException";
+  const duplicateEmailException = "DuplicateContactEmailException";
+  const customFieldsValidationException = "CustomFieldsValidationException";
+
+  function getSubmitButton(form) {
+    return form.querySelector("#subscribeNow");
+  }
+
+  function getServerError(form) {
+    return form.querySelector(".st-signupform-server-error-message");
+  }
+
+  function getTermsError(form) {
+    return form.querySelector(".st-signupform-terms-agreed-error");
+  }
+
+  function setServerErrorMessage(form, message) {
+    const error = getServerError(form);
+    if (!error) return;
+    error.innerText = message;
+    error.classList.toggle("st-hidden", !message);
+  }
+
+  function hideTermsAgreedError(form) {
+    getTermsError(form)?.classList.add("st-hidden");
+  }
+
+  function showTermsAgreedError(form) {
+    getSubmitButton(form).disabled = false;
+    getTermsError(form)?.classList.remove("st-hidden");
+  }
+
+  function clearFormErrors(form) {
+    form.querySelectorAll(`.${fieldErrorClassName}`).forEach((field) => {
+      field.classList.remove(fieldErrorClassName);
+      const fieldError = form.querySelector(`#js-error-${field.name}`);
+      if (fieldError) fieldError.innerText = "";
+    });
+
+    setServerErrorMessage(form, "");
+    hideTermsAgreedError(form);
+  }
+
+  function collectFormData(form) {
+    const formData = new FormData(form);
+    const data = {
+      webFormId,
+      fieldValues: {},
+      listIds: [],
+    };
+
+    formData.forEach((value, name) => {
+      if (name === "list") {
+        data.listIds.push(value);
+      } else if (name === "phone") {
+        data.fieldValues[name] = value.replace(/\D/g, "");
+      } else if (!["terms-agreed", "webFormId"].includes(name)) {
+        data.fieldValues[name] = value;
+      }
+    });
+
+    return data;
+  }
+
+  function convertServerErrorMessage(fieldName, errorMessage) {
+    const field = formFields.find((formField) => formField.name === fieldName);
+    if (!field) return errorMessage || "Validation error.";
+    if (errorMessage === "Required field value is empty") return `${field.label} is required`;
+    if (field.type === "phone") return `${field.label} is required in (XXX) XXX-XXXX format`;
+    return errorMessage;
+  }
+
+  function parseServerValidationError(response) {
+    try {
+      const error = JSON.parse(response);
+
+      if (error.code === duplicatePhoneException) {
+        return [{ fieldName: "phone", errorMessage: "Phone number already exists." }];
+      }
+      if (error.code === duplicateEmailException) {
+        return [{ fieldName: "email", errorMessage: "Email already exists." }];
+      }
+      if (error.code === customFieldsValidationException) {
+        return Object.entries(error.reasons).map(([key, value]) => ({
+          fieldName: key,
+          errorMessage: convertServerErrorMessage(key, value),
+        }));
+      }
+
+      return [{
+        fieldName: error.invalidValueName || "",
+        errorMessage: convertServerErrorMessage(error.invalidValueName, error.reason),
+      }];
+    } catch (error) {
+      return [{ fieldName: "", errorMessage: "Validation error." }];
+    }
+  }
+
+  function handleLoadForm(request, form) {
+    const submitButton = getSubmitButton(form);
+
+    if (request.status === 200) {
+      const formData = new FormData(form);
+      const confirmationText = form.querySelector(".step2-confirmationText");
+      confirmationText.innerText = confirmationText.innerText.replace("%%phone%%", formData.get("phone"));
+      form.querySelector(".step1-form").style.display = "none";
+      confirmationText.style.display = "block";
+      form.reset();
+      return;
+    }
+
+    submitButton.disabled = false;
+
+    if (request.status === 418) {
+      const validations = parseServerValidationError(request.responseText);
+      if (!validations.length) {
+        setServerErrorMessage(form, "Internal Error. Please, try later.");
+        return;
+      }
+
+      validations.forEach((validation) => {
+        if (!validation.fieldName) {
+          setServerErrorMessage(form, validation.errorMessage);
+          return;
+        }
+
+        form.querySelectorAll(`input[name="${validation.fieldName}"], textarea[name="${validation.fieldName}"]`).forEach((field) => {
+          field.classList.add(fieldErrorClassName);
+        });
+        const fieldError = form.querySelector(`#js-error-${validation.fieldName}`);
+        if (fieldError) fieldError.innerText = validation.errorMessage;
+      });
+      return;
+    }
+
+    setServerErrorMessage(form, "Internal Error. Please, try later.");
+  }
+
+  function sendForm(form) {
+    const request = new XMLHttpRequest();
+    request.open(form.method, `${form.action}?r=${Date.now()}`);
+    request.onload = () => handleLoadForm(request, form);
+    request.onerror = () => {
+      getSubmitButton(form).disabled = false;
+      setServerErrorMessage(form, "Internal Error. Please, try later.");
+    };
+    request.ontimeout = request.onerror;
+    request.setRequestHeader("Content-Type", "application/json; charset=UTF-8");
+    request.send(JSON.stringify(collectFormData(form)));
+  }
+
+  function formatPhone(value) {
+    const numbers = value.replace(/\D/g, "");
+    const firstPart = numbers.substring(0, 3);
+    const secondPart = numbers.substring(3, 6);
+    const thirdPart = numbers.substring(6, 10);
+    let result = "";
+
+    if (firstPart) result += `(${firstPart}`;
+    if (secondPart) result += `) ${secondPart}`;
+    if (thirdPart) result += `-${thirdPart}`;
+
+    return result;
+  }
+
+  forms.forEach((form, index) => {
+    if (form.hasAttribute("data-form-initialized")) return;
+    form.setAttribute("data-form-initialized", "true");
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const submitButton = getSubmitButton(form);
+      submitButton.disabled = true;
+      clearFormErrors(form);
+
+      if (!form.querySelector('input[name="terms-agreed"]').checked) {
+        showTermsAgreedError(form);
+        return;
+      }
+
+      sendForm(form);
+    });
+
+    form.querySelectorAll('input[data-type="phone"]').forEach((field) => {
+      field.addEventListener("input", (event) => {
+        event.currentTarget.value = formatPhone(event.currentTarget.value);
+      });
+    });
+
+    const agreedField = form.querySelector(`#terms-agreed-checkbox-${webFormId}`);
+    const agreedLabel = form.querySelector(".st-terms-and-conditions-text");
+    if (agreedField && agreedLabel) {
+      agreedField.id += `-${index}`;
+      agreedLabel.setAttribute("for", agreedField.id);
+    }
+  });
+}
+
 initAgeGate();
 initFeaturedCarousel();
+initTodayHours();
 initHideableHeader();
+initTextAlertSignup();
 loadStorefront();
